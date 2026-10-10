@@ -3,6 +3,7 @@
 #include <fstream>
 #include <vector>
 #include "pixel.h"
+#include <algorithm> // provided std:: sort() to order the pixels.
 
 void average_colors(std::vector<Pixel> &pixels_list);
 void flip_vertically(std::vector<Pixel> &pixels_list);
@@ -71,13 +72,49 @@ int main( int argc, char* argv[])
 
     std::cout << "Pixel read: " << pixels_list.size() << "\n";
 
+
+    std::sort(pixels_list.begin(), pixels_list.end(),
+    [](const Pixel &a, const Pixel &b)
+    {
+        if (a.x != b.x) 
+        {
+            return a.x < b.x; //Smaller column comes first
+        }
+        return a.y < b.y; // Within a column, smaller row comes first
+        
+    });
+
+    std::ofstream output_file("flipped.dat"); //Open the output file
+
+        if (!output_file.is_open())
+        {
+            std::cerr << "Error to open output file: flipped.dat\n";
+
+            return 1; 
+        }
+    for (int i = 0; i < pixels_list.size(); i++)
+    {
+        output_file 
+        << pixels_list[i].x << "," 
+        << pixels_list[i].y << "," 
+        << pixels_list[i].red << "," 
+        << pixels_list[i].green << "," 
+        << pixels_list[i].blue << "\n";
+    }
+
+    output_file.close(); // Close the output file after writing all pixels
+
+    std::cout << "Flipped pixels written to flipped.dat\n";
+    
+
     return 0; // Exit the program successfully
 }
 
 void average_colors(std::vector<Pixel> &pixels_list)
 {
-    if (pixel_list.empty())
+    if (pixels_list.empty())
     {
+        std::cout << "No pixels to average.\n";
         return; // Exit the function if the list is empty
 
     }
@@ -90,18 +127,21 @@ void average_colors(std::vector<Pixel> &pixels_list)
         blue += pixels_list[i].blue;
     }
 
-    std::cout << "Average red: " << red / pixels_list.size() <<'\n';
-    std::cout <<" Average green " << green/ pixels_list.size(); <<'\n';
-    std::cout <<" Average blue " << blue/ pixels_list.size(); <<'\n';
+    std::cout << "Average red: " << red/ pixels_list.size() << '\n';
+    std::cout << "Average green: " << green/ pixels_list.size() << '\n';
+    std::cout << "Average blue: " << blue/ pixels_list.size() << '\n';
 
 }
 
 void flip_vertically(std::vector<Pixel> &pixels_list)
 
 {
-    for (int i = 0; i < pixel_list.size(); i++)
+    const int image_height = 256;
+    
+    for (int i = 0; i < pixels_list.size(); i++)
     {
-        pixel_list[i].y = 255 - pixel_list[i].y; // Flip the y-coordinate vertically
+        pixels_list[i].y = (image_height - 1) - pixels_list[i].y; // Flip the y-coordinate vertically
     }    
 }
+
 
