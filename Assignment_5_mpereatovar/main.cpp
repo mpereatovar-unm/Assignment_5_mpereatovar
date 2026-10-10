@@ -9,12 +9,12 @@ void average_colors(std::vector<Pixel> &pixels_list);
 void flip_vertically(std::vector<Pixel> &pixels_list);
 
 
-int main( int argc, char* argv[])
+int main(int argc, char* argv[])
 
 {
     if (argc != 2)
     {
-        std:: cerr <<"Usage: " << argv [0] << "pixels.dat\n";
+        std::cerr <<"Usage: " << argv [0] << "pixels.dat\n";
 
         return 1; // Exit the program with an error code
     }
@@ -27,6 +27,7 @@ int main( int argc, char* argv[])
         std::cerr << "Error opening file: " << filename << "\n";
         return 1; // Exit the program with an error code
     }
+
     std::vector<Pixel> pixels_list; // Create an empty list of pixels
     std::string line;
 
@@ -35,7 +36,7 @@ int main( int argc, char* argv[])
         std::string values[5]; //array holds the five values
         std::size_t start = 0; //index for parsing the line
 
-        for (int i= 0; i < 4; i++) 
+        for (int i = 0; i < 4; i++) 
         { 
             std::size_t comma = line.find(',', start);
             values[i] = line.substr(start, comma - start);
@@ -72,6 +73,12 @@ int main( int argc, char* argv[])
 
     std::cout << "Pixel read: " << pixels_list.size() << "\n";
 
+    /* Notes for me: sort() orders the pixels using the comparsion inside[]
+    this unnamed function is called a lambda function. It compares pixels a and b,
+    returning true when a should come first. It sorts by x first, then by y.
+    The colors stay attached to each pixel as they are sorted.
+    */
+
 
     std::sort(pixels_list.begin(), pixels_list.end(),
     [](const Pixel &a, const Pixel &b)
@@ -92,7 +99,10 @@ int main( int argc, char* argv[])
 
             return 1; 
         }
-    for (int i = 0; i < pixels_list.size(); i++)
+
+    output_file.precision (9);
+
+    for (std:: size_t i = 0; i < pixels_list.size(); i++)
     {
         output_file 
         << pixels_list[i].x << "," 
@@ -102,10 +112,15 @@ int main( int argc, char* argv[])
         << pixels_list[i].blue << "\n";
     }
 
-    output_file.close(); // Close the output file after writing all pixels
-
-    std::cout << "Flipped pixels written to flipped.dat\n";
+    output_file.close();
     
+    if (!output_file)
+    {
+        std::cerr << "Error to close output file: flipped.dat\n";
+        return 1;
+    }
+    
+    std::cout << "Saved flipped.dat\n";    
 
     return 0; // Exit the program successfully
 }
@@ -120,12 +135,13 @@ void average_colors(std::vector<Pixel> &pixels_list)
     }
 
     double red = 0, green = 0, blue = 0;
-    for (int i = 0; i < pixels_list.size(); i++)
+    for (std::size_t i = 0; i < pixels_list.size(); i++)
     {
         red += pixels_list[i].red;
         green += pixels_list[i].green;
         blue += pixels_list[i].blue;
     }
+
 
     std::cout << "Average red: " << red/ pixels_list.size() << '\n';
     std::cout << "Average green: " << green/ pixels_list.size() << '\n';
@@ -136,12 +152,14 @@ void average_colors(std::vector<Pixel> &pixels_list)
 void flip_vertically(std::vector<Pixel> &pixels_list)
 
 {
-    const int image_height = 256;
     
-    for (int i = 0; i < pixels_list.size(); i++)
+    for (std::size_t i = 0; i < pixels_list.size(); i++)
     {
-        pixels_list[i].y = (image_height - 1) - pixels_list[i].y; // Flip the y-coordinate vertically
+        pixels_list[i].y = 255 - pixels_list[i].y; // Flip the y-coordinate vertically
     }    
 }
+
+
+
 
 
