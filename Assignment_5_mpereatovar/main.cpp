@@ -1,3 +1,8 @@
+// Source: Youtube.com/watch?v=HXHqtctqLLQ&t=6s, Claude AI, Chat Gpt, Learn.Microsoft C++
+//https://learn.microsoft.com/en-us/cpp/standard-library/vector-class?view=msvc-170
+//https://learn.microsoft.com/en-us/cpp/standard-library/vector-class?view=msvc-170
+
+
 #include <iostream>
 #include <string>
 #include <fstream>
