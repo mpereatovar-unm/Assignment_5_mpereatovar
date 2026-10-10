@@ -4,12 +4,16 @@
 #include <vector>
 #include "pixel.h"
 
+void average_colors(std::vector<Pixel> &pixels_list);
+void flip_vertically(std::vector<Pixel> &pixels_list);
+
+
 int main( int argc, char* argv[])
 
 {
-    if argc !=2)
+    if (argc != 2)
     {
-        std: : cerr <<"Usage: " << argv [0] << "pixels.dat\n";
+        std:: cerr <<"Usage: " << argv [0] << "pixels.dat\n";
 
         return 1; // Exit the program with an error code
     }
@@ -37,9 +41,67 @@ int main( int argc, char* argv[])
             start = comma + 1; //Move past the comma to the next value.
 
         }
+        values[4] = line.substr(start); // Get the last value after the last comma
+        
+        Pixel pixel; // Create a Pixel object for this line
+       
+        pixel.x = std::stoi(values[0]);
+        pixel.y = std::stoi(values[1]);
+        pixel.red = std::stoi(values[2]);
+        pixel.green = std::stoi(values[3]);
+        pixel.blue = std::stoi(values[4]);
 
+        pixels_list.push_back(pixel); // Add the pixel to the list
 
+    }
 
-    return 0;
+    /*Notes for me, program in C++
+     reads the input file one line at a time using getline ().
+    Each line contains five comma-separated values in order x, y, red, green, blue.
+    A loop uses find () to locate the first four commas and substr() to extract the text between them.
+    After each comma, the starting index moves to the next value. The stoi() function converts the x and y strings
+    to integers, and stof () converts the red, green, and blue strings to floating-point numbers. These
+    numbers assigned to a Pixel object, which is added to the end of the pixel_list vector.
+    */
+   
+    input_file.close(); // Close the input file after reading all lines
+
+    average_colors(pixels_list);
+    flip_vertically(pixels_list);
+
+    std::cout << "Pixel read: " << pixels_list.size() << "\n";
+
+    return 0; // Exit the program successfully
+}
+
+void average_colors(std::vector<Pixel> &pixels_list)
+{
+    if (pixel_list.empty())
+    {
+        return; // Exit the function if the list is empty
+
+    }
+
+    double red = 0, green = 0, blue = 0;
+    for (int i = 0; i < pixels_list.size(); i++)
+    {
+        red += pixels_list[i].red;
+        green += pixels_list[i].green;
+        blue += pixels_list[i].blue;
+    }
+
+    std::cout << "Average red: " << red / pixels_list.size() <<'\n';
+    std::cout <<" Average green " << green/ pixels_list.size(); <<'\n';
+    std::cout <<" Average blue " << blue/ pixels_list.size(); <<'\n';
+
+}
+
+void flip_vertically(std::vector<Pixel> &pixels_list)
+
+{
+    for (int i = 0; i < pixel_list.size(); i++)
+    {
+        pixel_list[i].y = 255 - pixel_list[i].y; // Flip the y-coordinate vertically
+    }    
 }
 
